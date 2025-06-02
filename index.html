@@ -190,7 +190,7 @@
 <!-- Custom Script -->
 <script src="js/custom.js"></script>
 
-<script>
+<!-- <script>
   const sound = new Howl({
     src: ['audio/bg_audio.mp3'],
     autoplay: true,
@@ -222,7 +222,72 @@
       playbackIcon.classList.add('icon-music-pause-button');
     }
   });
+</script> -->
+
+<script>
+  let sound; // Declare globally
+  let isPlaying = false;
+
+  // Resume Howler context & manually start playback
+  document.addEventListener('click', () => {
+    if (Howler.ctx && Howler.ctx.state === 'suspended') {
+      Howler.ctx.resume();
+    }
+
+    if (!sound) {
+      sound = new Howl({
+        src: ['audio/bg_audio.mp3'],
+        loop: true,
+        volume: 0.3,
+        onplay: () => {
+          isPlaying = true;
+          updatePlaybackButton();
+        },
+        onpause: () => {
+          isPlaying = false;
+          updatePlaybackButton();
+        },
+        onend: () => {
+          isPlaying = false;
+          updatePlaybackButton();
+        }
+      });
+
+      sound.play();
+    } else if (!isPlaying) {
+      sound.play();
+    }
+
+  }, { once: true });
+
+  const playbackBtn = document.getElementById('playback');
+  const playbackIcon = playbackBtn.querySelector('i');
+
+  function updatePlaybackButton() {
+    if (isPlaying) {
+      playbackBtn.classList.remove('pause');
+      playbackBtn.classList.add('play');
+      playbackIcon.classList.remove('icon-music-play-button');
+      playbackIcon.classList.add('icon-music-pause-button');
+    } else {
+      playbackBtn.classList.remove('play');
+      playbackBtn.classList.add('pause');
+      playbackIcon.classList.remove('icon-music-pause-button');
+      playbackIcon.classList.add('icon-music-play-button');
+    }
+  }
+
+  playbackBtn.addEventListener('click', function () {
+    if (!sound) return;
+
+    if (isPlaying) {
+      sound.pause();
+    } else {
+      sound.play();
+    }
+  });
 </script>
+
 
 </body>
 </html>
