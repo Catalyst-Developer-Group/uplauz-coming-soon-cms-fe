@@ -198,6 +198,12 @@
     volume: 0.3
   });
 
+  document.addEventListener('click', () => {
+    if (Howler.ctx && Howler.ctx.state === 'suspended') {
+      Howler.ctx.resume();
+    }
+  }, { once: true });
+
   const playbackBtn = document.getElementById('playback');
   const playbackIcon = playbackBtn.querySelector('i');
 
